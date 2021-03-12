@@ -6,7 +6,7 @@ import numpy as np
 import cv2
 
 
-def grid_display(array, num_rows=None, num_columns=None):
+def grid_display(array, num_rows=None, num_columns=None, padding=2, pad_value=0):
     """
     Display a list of images as a grid.
 
@@ -40,6 +40,12 @@ def grid_display(array, num_rows=None, num_columns=None):
         array,
         np.zeros((number_of_missing_elements, *array[0].shape)).astype(array.dtype),
         axis=0,
+    )
+
+    array = np.pad(
+        array,
+        ((0, 0), (padding, padding), (padding, padding), (0, 0)),
+        constant_values=(pad_value),
     )
 
     grid = np.concatenate(
