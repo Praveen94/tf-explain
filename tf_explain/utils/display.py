@@ -96,7 +96,12 @@ def image_to_uint_255(image):
 
 
 def heatmap_display(
-    heatmap, original_image, colormap=cv2.COLORMAP_VIRIDIS, image_weight=0.7
+    heatmap,
+    original_image,
+    colormap=cv2.COLORMAP_VIRIDIS,
+    image_weight=0.7,
+    mean_transform=None,
+    std_dev_transform=None,
 ):
     """
     Apply a heatmap (as an np.ndarray) on top of an original image.
@@ -111,6 +116,16 @@ def heatmap_display(
     Returns:
         np.ndarray: Original image with heatmap applied
     """
+    if np.all(mean_transform) != None and np.all(std_dev_transform) != None:
+        if (
+            original_image.shape[-1]
+            == mean_transform.shape[0]
+            == std_dev_transform.shape[0]
+        ):
+            original_image = original_image * std_dev_transform
+            original_image = original_image + mean_transform
+            original_image = np.uint8(original_image)
+
     heatmap = cv2.resize(heatmap, (original_image.shape[1], original_image.shape[0]))
 
     image = image_to_uint_255(original_image)
